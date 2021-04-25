@@ -36,12 +36,17 @@ class OrderController extends Controller
         $order->min_price    = $rate->min_price;
         $order->price_km     = $rate->km_price;
         $order->price_minuts = $rate->minut_price;
+        $order->user_id      = $request->user()->id;
         $order->final_price  = $rate->min_price+($minuts*$rate->minut_price) + ($km*$rate->km_price);
-        $order->save();
+        
+        if($order->save()){
+            return response()->json(['success'=>true]);
+        }
+        
     }
 
     public function get (Request $request){
-        return Order::where('user_id', $request->user()->id);
+        return Order::where('user_id', $request->user()->id)->get();
     }
 
 }
